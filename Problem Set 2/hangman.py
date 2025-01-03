@@ -284,7 +284,6 @@ def hangman_with_hints(secret_word):
     guesses = 6
     letters_guessed = []
     warnings = 3
-    hint = False
     vowels = ['a', 'e', 'i', 'o', 'u']
 
 
@@ -299,15 +298,17 @@ def hangman_with_hints(secret_word):
       letter = input("Please guess a letter:").lower()
       if letter == '*':
         show_possible_matches(get_guessed_word(secret_word, letters_guessed))
-        hint = True
 
       elif letter.isalpha() == False:
         if warnings >= 1:
           warnings-=1
-          print("Oops! That is not a valid letter. You have", warnings, "left:", end=" ")
+          print("Oops! That is not a valid letter. You have", warnings, "left:", end="")
         else:
-          print("Oops! That is not a valid letter. You have no warnings left so you lose one guess:", end=" ")
+          print("Oops! That is not a valid letter. You have no warnings left so you lose one guess:", end="")
           guesses -= 1
+      
+        print(get_guessed_word(secret_word, letters_guessed))
+        print("-------------")
       elif (letter in letters_guessed) == True:
         if warnings >= 1:
           warnings-=1
@@ -315,32 +316,33 @@ def hangman_with_hints(secret_word):
         else:
           print("Oops! You've already guessed that letter. You have no warnings left so you lose one guess:", end=" ")
           guesses -= 1
+        print(get_guessed_word(secret_word, letters_guessed))
+        print("-------------")
+
       else:
         letters_guessed.append(letter)
 
         # Letter is in Secret Word
         if(is_word_guessed(secret_word, letters_guessed)):
-           print("Good guess: ")
+           print("Good guess: ", end=" ")
         else:
           # Vowels
           if (letter in vowels):
             guesses-=2
+            print("Oops! That letter is not in my word: ", end="")
           else:
             # Consonants
             guesses -= 1
-          print("Oops! That letter is not in my word: ")
-      
-      if hint == False:
+            print("Oops! That letter is not in my word: ", end="")
+
         print(get_guessed_word(secret_word, letters_guessed))
-        if get_guessed_word(secret_word, letters_guessed) == secret_word:
-          print("-------------")
-          print("Congratulations, you won!")
-          print("Your total score for this game is:", guesses * len(letters_guessed))
-          break
-      else:
-        print("\n-------------")
-        hint = False
+        print("-------------")
+
       
+      if get_guessed_word(secret_word, letters_guessed) == secret_word:
+        print("Congratulations, you won!")
+        print("Your total score for this game is:", guesses * len(letters_guessed))
+        break
     else:
       print("Sorry, you ran out of guesses. The word was", secret_word)
 
